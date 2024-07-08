@@ -5,3 +5,5 @@ __pycache__/
 
 # config.py 무시
 config.py
+
+/venv
