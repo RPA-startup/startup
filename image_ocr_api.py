@@ -71,8 +71,8 @@ def process_and_display_images(image_sources, prompt):
  
     return response_text
   
-image_sources = ["test.jpg"]
-prompt = "백화점 행사 사진이야 이 사진에서 텍스트 추출해서 OCR 수행해줘 브랜드명 행사내용 행사품목으로 정리해줘"
+image_sources = ["res/img/test.jpg"]
+prompt = "행사 사진이야 이 사진에서 텍스트 추출해서 OCR 수행해줘 행사내용 정리해줘"
 response_text = process_and_display_images(image_sources, prompt)
 
 #출력 결과
