@@ -1,60 +1,76 @@
-import base64
+import openai
 import requests
-from PIL import Image
-from io import BytesIO
+from PIL import Image, ImageDraw
 import matplotlib.pyplot as plt
+import base64
+import io
 import config
 
-api_key = config.OPENAI_API_KEY
+openai.api_key = config.OPENAI_API_KEY
+client = openai.OpenAI()
 
-
-# 이미지를 base64로 인코딩하는 함수
-def encode_image(image_path):
-    with open(image_path, "rb") as image_file:
-        return base64.b64encode(image_file.read()).decode('utf-8')
+# 이미지를 base64로 인코딩하고 PIL 이미지 객체를 반환하는 함수
+def load_and_encode_images(image_sources):
+    encoded_images = []
+    pil_images = []
+    for source in image_sources:
+        if source.startswith('http'):  # URL인 경우
+            response = requests.get(source)
+            image_data = response.content
+        else:  # 파일 경로인 경우
+            with open(source, "rb") as image_file:
+                image_data = image_file.read()
  
-# 이미지 경로
-image_path = "test.jpg"
+        pil_images.append(Image.open(io.BytesIO(image_data)))
+        encoded_images.append(base64.b64encode(image_data).decode('utf-8'))
+    return encoded_images, pil_images
+  
+# 응답결과와 이미지를 출력하기 위한 함수
+def display_response(pil_images, response_text):
+    # 이미지 로딩 및 서브플롯 생성
+    fig, axes = plt.subplots(nrows=1, ncols=len(pil_images), figsize=(5 * len(pil_images), 5))
+    if len(pil_images) == 1:  # 하나의 이미지인 경우
+        axes = [axes]
  
-# base64 문자열 얻기
-base64_image = encode_image(image_path)
+    # 이미지들 표시
+    for i, img in enumerate(pil_images):
+        axes[i].imshow(img)
+        axes[i].axis('off')  # 축 정보 숨기기
+        axes[i].set_title(f'Image #{i+1}')
  
-headers = {
-    "Content-Type": "application/json",
-    "Authorization": f"Bearer {api_key}"
-}
+    # 전체 플롯 표시
+    plt.show()
  
-payload = {
-    "model": "gpt-4-vision-preview",
-    "messages": [
-      {
-        "role": "user",
-        "content": [
-          {
-            "type": "text",
-            "text": "이 사진에 대해 설명해줘"
-          },
-          {
-            "type": "image_url",
-            "image_url": {
-              "url": f"data:image/jpeg;base64,{base64_image}"
-            }
-          }
-        ]
-      }
-    ],
-    "max_tokens": 1000
-}
+    print(response_text)
+    
+    # 이미지 경로 또는 URL과 프롬프트를 처리하는 함수
+def process_and_display_images(image_sources, prompt):
+    # 이미지 로드, base64 인코딩 및 PIL 이미지 객체 생성
+    base64_images, pil_images = load_and_encode_images(image_sources)
  
-response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
-# 'content' 부분만 추출하여 출력
-content = response.json()['choices'][0]['message']['content']
+    # OpenAI에 요청 보내기
+    messages = [
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": prompt}
+            ] + [{"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}} for base64_image in base64_images]
+        }
+    ]
  
-# 이미지 표시
-img = Image.open(image_path)
-plt.imshow(img)
-plt.axis('off')  # 축 정보 숨기기
-plt.show()
+    response = client.chat.completions.create(
+        model="gpt-4-vision-preview",
+        messages=messages,
+        max_tokens=1000
+    )
  
-# 응답 출력
-print(content)
+    response_text = response.choices[0].message.content
+ 
+    # 응답과 이미지 표시
+    display_response(pil_images, response.choices[0].message.content)
+ 
+    return response_text
+  
+image_sources = ["test.jpg"]
+prompt = "이 사진에서 텍스트 추출해서 OCR 수행해줘"
+response_text = process_and_display_images(image_sources, prompt)
