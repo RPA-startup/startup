@@ -3,6 +3,7 @@ import requests
 from PIL import Image
 from io import BytesIO
 import matplotlib.pyplot as plt
+import config
 
 api_key = config.OPENAI_API_KEY
 
@@ -13,7 +14,7 @@ def encode_image(image_path):
         return base64.b64encode(image_file.read()).decode('utf-8')
  
 # 이미지 경로
-image_path = "/test.jpg"
+image_path = "test.jpg"
  
 # base64 문자열 얻기
 base64_image = encode_image(image_path)
