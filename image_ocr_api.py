@@ -1,3 +1,8 @@
+# 가상환경 생성 (venv은 가상환경 이름)
+# python3 -m venv venv
+# 가상환경 활성화 (윈도우)
+# venv\Scripts\activate
+
 import openai
 import requests
 from PIL import Image, ImageDraw
