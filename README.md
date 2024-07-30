@@ -40,7 +40,7 @@
 - Company : VARCHAR(12)-백화점 구분
 - Branch : VARCHAR(20)-지점 구분
 - Division : VARCHAR(20)-카테고리 구분
-- Brand : VARCHAR(20)-브랜드
+- Brand : VARCHAR(200)-브랜드 또는 행사명
 - Body : MEDIUMTEXT-내용
 - StartDate : Date(yyyy-MM-dd)-시작일자
 - EndDate : Date(yyyy-MM-dd)-종료일자
