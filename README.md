@@ -37,15 +37,15 @@
 - **컨벤션 준수**: 팀의 네이밍 컨벤션 및 기타 규칙을 준수.
 
 ## 8. DB Table구조
-0. EventID INT AUTO_INCREMENT PRIMARY KEY
-1. DepartmentStore VARCHAR(100) NOT NULL - 백화점 [ ex. 롯데, 신세계 ]
-2. StoreLocation VARCHAR(100) NOT NULL - 점포 [ ex. 강남점, 월드타워점, 신사점 , ... ]
-3. Category VARCHAR(50) - 행사 분류 [ ex. 테마, 쇼핑뉴스, 이벤트, 사은행사, ... ]
-4. Title VARCHAR(255) NOT NULL - 행사 제목 [ ex. 생로랑 팝업 스토어, 신세계 제휴카드 최대 12개월 무이자 할부 혜택  ] - 제목이 길 수 있음
-5. Content TEXT - 행사 내용 [ ex. 생로랑 팝업 이벤트로 10% 할인, 신세계 카드 사용시 2-6개월 무이자 할부 ] - 내용이 클 수 있음
-6. StartDate DATE - 행사 시작 날짜 [ ex. 20240729, 20240801 ]
-7. EndDate DATE - 행사 종료 날짜 [ ex. 20240729, 20240801 ]
-8. Keywords VARCHAR(255) - 키워드 [ ex. 팝업, 행사, 쿠폰, ... ] - 여러개 입력 가능함
-9. ImageURL VARCHAR(255) - 이미지주소 - cnd 서버 주소
-10. CreatedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP - 등록 날짜 - 해당 db에 입력되는 날짜
-11. UpdatedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP - 수정 날짜 - 해당 db에 수정되는 날짜
+0. **EventID** `INT` AUTO_INCREMENT PRIMARY KEY
+1. **DepartmentStore** `VARCHAR(100)` NOT NULL - 백화점 [ ex. 롯데, 신세계 ]
+2. **StoreLocation** `VARCHAR(100)` NOT NULL - 점포 [ ex. 강남점, 월드타워점, 신사점 , ... ]
+3. **Category** `VARCHAR(50)` - 행사 분류 [ ex. 테마, 쇼핑뉴스, 이벤트, 사은행사, ... ]
+4. **Title** `VARCHAR(255)` NOT NULL - 행사 제목 [ ex. 생로랑 팝업 스토어, 신세계 제휴카드 최대 12개월 무이자 할부 혜택  ] - 제목이 길 수 있음
+5. **Content** `TEXT` - 행사 내용 [ ex. 생로랑 팝업 이벤트로 10% 할인, 신세계 카드 사용시 2-6개월 무이자 할부 ] - 내용이 클 수 있음
+6. **StartDate** `DATE` - 행사 시작 날짜 [ ex. 20240729, 20240801 ]
+7. **EndDate** `DATE` - 행사 종료 날짜 [ ex. 20240729, 20240801 ]
+8. **Keywords** `VARCHAR(255)` - 키워드 [ ex. 팝업, 행사, 쿠폰, ... ] - 여러개 입력 가능함
+9. **ImageURL** `VARCHAR(255)` - 이미지주소 - cnd 서버 주소
+10. **CreatedDate** `TIMESTAMP` DEFAULT CURRENT_TIMESTAMP - 등록 날짜 - 해당 db에 입력되는 날짜
+11. **UpdatedDate** `TIMESTAMP` DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP - 수정 날짜 - 해당 db에 수정되는 날짜
