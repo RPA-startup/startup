@@ -49,3 +49,5 @@
 9. **ImageURL** `VARCHAR(255)` - 이미지주소 - cnd 서버 주소
 10. **CreatedDate** `TIMESTAMP DEFAULT CURRENT_TIMESTAMP` - 등록 날짜 - 해당 db에 입력되는 날짜
 11. **UpdatedDate** `TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP` - 수정 날짜 - 해당 db에 수정되는 날짜
+ ![image](https://github.com/user-attachments/assets/1206e368-88eb-4aa9-acd7-066158daa3c5)
+
