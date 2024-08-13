@@ -1,18 +1,35 @@
-import pytesseract
-from PIL import Image
+# 가상환경 생성 (venv은 가상환경 이름)
+# python3 -m venv venv
+# 가상환경 활성화 (윈도우)
+# venv\Scripts\activate
 
-# 이미지를 업로드하여 OCR을 수행하는 함수
-def upload_image_and_ocr(image_path):
-    # OCR을 위해 Tesseract 사용
-    image = Image.open(image_path)
-    ocr_text = pytesseract.image_to_string(image)
-    return ocr_text
+from database import connect_db, get_empty_content_rows, update_content, disconnect_db
+from openai_client import process_images_and_get_response
 
-# 이미지 경로 설정 (절대 경로 또는 올바른 상대 경로 사용)
-image_path = './test.jpg'
+# Main execution
+if __name__ == "__main__":
+    print("***프로그램 시작***")
 
-# OCR 수행
-ocr_result = upload_image_and_ocr(image_path)
+    # 데이터베이스 연결
+    conn, cur = connect_db()
 
-# OCR 결과 출력
-print(ocr_result)
+    # Content가 비어 있는 행들 가져오기
+    rows = get_empty_content_rows(cur)
+    
+    print(rows)
+    
+    if rows:
+        for row in rows:
+            event_id = row[0]
+            image_url = row[1]
+
+            print(f"현재 처리 중인 행 EventID: {event_id}, 이미지 URL: {image_url}")
+
+            # OpenAI API를 사용하여 이미지 처리 및 Content 업데이트
+            response_text = process_images_and_get_response([image_url])
+            update_content(cur, conn, event_id, response_text)
+    
+    # 데이터베이스 연결 종료
+    disconnect_db(conn, cur)
+
+    print("프로그램 종료.")
