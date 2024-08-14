@@ -19,6 +19,14 @@ def connect_db():
         sys.exit(1)
     return conn, cur
 
+def get_data(cur, query):
+    #retrieving information
+    cur.execute(query) 
+    column_names = [desc[0] for desc in cur.description]
+    results = cur.fetchall()
+    results_as_dicts = [dict(zip(column_names, row)) for row in results]
+    return results_as_dicts
+
 # Keywords가 비어 있는 행들을 가져옴
 def get_empty_keywords_rows(cur):
     try:
