@@ -19,10 +19,10 @@ def connect_db():
         sys.exit(1)
     return conn, cur
 
-# Content가 비어 있는 행들을 가져옴
-def get_empty_content_rows(cur):
+# Keywords가 비어 있는 행들을 가져옴
+def get_empty_keywords_rows(cur):
     try:
-        query = f"SELECT EventID, ImageURL FROM {config.DB_Info['table']} WHERE Content IS NULL OR Content = ''"
+        query = f"SELECT EventID, ImageURL, Content FROM {config.DB_Info['table']} WHERE Keywords IS NULL OR Keywords = ''"
         print(f"쿼리 실행 중: {query}")
         cur.execute(query)
         resultset = cur.fetchall()
@@ -32,11 +32,18 @@ def get_empty_content_rows(cur):
         return None
     return resultset
 
-# 특정 행의 Content를 업데이트
-def update_content(cur, conn, event_id, content):
+# 특정 행의 Content를 업데이트 (기존 내용에 추가)
+def update_content(cur, conn, event_id, additional_content):
     try:
         print(f"EventID {event_id}에 대해 Content 업데이트 중...")
-        cur.execute(f"UPDATE {config.DB_Info['table']} SET Content = %s WHERE EventID = %s", (content, event_id))
+
+        # 기존 Content 가져오기
+        cur.execute(f"SELECT Content FROM {config.DB_Info['table']} WHERE EventID = %s", (event_id,))
+        existing_content = cur.fetchone()[0]
+
+        # 새로운 Content로 업데이트
+        new_content = (existing_content or '') + additional_content
+        cur.execute(f"UPDATE {config.DB_Info['table']} SET Content = %s WHERE EventID = %s", (new_content, event_id))
         conn.commit()
         print(f"EventID {event_id}에 대해 Content 업데이트 완료.")
     except mariadb.Error as e:
