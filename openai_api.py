@@ -18,7 +18,7 @@ def process_images_and_get_response(base64_images):
             "role": "user",
             "content": [
                 {"type": "text", "text": "모든 답변 한글로 설정. 백화점 행사 사진에 대해 텍스트 추출. 이미지의 높이가 5000픽셀 이상일 경우 이미지를 확대해서 정확한 내용으로 처리. 불가능 할경우 '내용 처리불가' 으로 답변.MariaDB 에 컬럼 속성이 text 인 row 하나에 입력할 수 있는 형태로 답변. "}
-            ] + [{"type": "image", "image": {"base64_data": image}} for image in base64_images]
+            ] + [{"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}} for base64_image in base64_images]
         }
     ]
  
