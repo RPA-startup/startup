@@ -57,6 +57,30 @@ def update_content(cur, conn, event_id, additional_content):
     except mariadb.Error as e:
         print(f"EventID {event_id} 업데이트 중 오류 발생: {e}")
 
+# Keywords가 비어있고 Content가 채워진 행들을 가져옴
+def get_filled_content_rows(cur):
+    try:
+        query = f"SELECT EventID, DepartmentStore, StoreLocation, Title, Content, StartDate, EndDate, ImageURL FROM {config.DB_Info['table']} WHERE Keywords IS NULL OR Keywords = '' AND Content IS NOT NULL"
+        print(f"쿼리 실행 중: {query}")
+        cur.execute(query)
+        resultset = cur.fetchall()
+        print(f"가져온 행의 수: {len(resultset)}")
+    except mariadb.Error as e:
+        print(f"쿼리 실행 중 오류 발생: {e}")
+        return None
+    return resultset
+
+# 특정 행의 Keywords를 업데이트
+def update_keywords(cur, conn, event_id, keywords):
+    try:
+        print(f"EventID {event_id}에 대해 Keywords 업데이트 중...")
+        cur.execute(f"UPDATE {config.DB_Info['table']} SET Keywords = %s WHERE EventID = %s", (keywords, event_id))
+        conn.commit()
+        print(f"EventID {event_id}에 대해 Keywords 업데이트 완료.")
+    except mariadb.Error as e:
+        print(f"EventID {event_id} 업데이트 중 오류 발생: {e}")
+
+
 # 데이터베이스 연결 종료
 def disconnect_db(conn, cur):
     cur.close()

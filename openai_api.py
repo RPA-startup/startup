@@ -34,3 +34,29 @@ def process_images_and_get_response(base64_images):
     print("OpenAI API 요청 완료.")
  
     return response_text
+
+# 주어진 정보로 키워드를 생성하는 함수
+def generate_keywords(department_store, store_location, title, content, start_date, end_date, site_url):
+    print("키워드 생성 요청을 OpenAI API에 보냅니다...")
+
+    prompt = (
+        f"백화점 행사에 대해 정보를 키워드로 저장하고 있어 이 행사에 대해 대표적인 키워드를 5~10가지 정도 뽑아줘 키워드는 , 로 구분해야해.\n"
+        f"백화점: {department_store} {store_location}\n"
+        f"행사 제목: {title}\n"
+        f"행사 내용: {content}\n"
+        f"행사 시작일자: {start_date}\n"
+        f"행사 마감일자: {end_date}\n"
+        f"사이트 주소: {site_url}"
+    )
+
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {"role": "user", "content": prompt}
+        ],
+        max_tokens=200
+    )
+
+    keywords = response.choices[0].message.content.strip()
+    print("생성된 키워드: ", keywords)
+    return keywords
