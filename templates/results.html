@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>검색 결과</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <h1>검색 결과</h1>
+    
+    {% if events %}
+    <table>
+        <tr>
+            <th>Event ID</th>
+            <th>Department Store</th>
+            <th>Store Location</th>
+            <th>Category</th>
+            <th>Title</th>
+            <th>Content</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Keywords</th>
+            <th>Site URL</th>
+            <th>Image URL</th>
+        </tr>
+        {% for event in events %}
+        <tr>
+            <td>{{ event[0] }}</td>
+            <td>{{ event[1] }}</td>
+            <td>{{ event[2] }}</td>
+            <td>{{ event[3] }}</td>
+            <td>{{ event[4] }}</td>
+            <td>{{ event[5] }}</td>
+            <td>{{ event[6] }}</td>
+            <td>{{ event[7] }}</td>
+            <td>{{ event[8] }}</td>
+            <td>{{ event[9] }}</td>
+            <td>{{ event[10] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>검색 결과가 없습니다.</p>
+    {% endif %}
+</body>
+</html>
