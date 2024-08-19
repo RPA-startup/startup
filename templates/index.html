@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로봇 마케터</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('/static/images/spark-image.jpg'); /* 전기 스파크 이미지 경로 */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: white;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            display: flex;
+            width: 100%;
+            max-width: 600px;
+            border: 2px solid #fff;
+            border-radius: 24px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .search-box input {
+            flex-grow: 1;
+            border: none;
+            background: none;
+            outline: none;
+            font-size: 18px;
+            color: white;
+        }
+
+        .search-box button {
+            background-color: #4285F4;
+            border: none;
+            border-radius: 24px;
+            padding: 10px 20px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .search-box button:hover {
+            background-color: #357ae8;
+        }
+
+        .warning-text {
+            margin-top: 20px;
+            font-size: 14px;
+            color: red;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">AI Robot Marketer</div>
+    <div class="search-box">
+        <input type="text" placeholder="검색어를 입력하세요">
+        <button>검색</button>
+    </div>
+    <div class="warning-text">
+        AI가 작성한 내용으로 허위 사실이 포함될 수 있습니다.
+    </div>
+</body>
+</html>
