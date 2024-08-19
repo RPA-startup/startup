@@ -2,9 +2,8 @@
 # pip install flask
 # python app.py 실행 후 http://127.0.0.1:5000 접속
 from flask import Flask, render_template, request
-from database_api import connect_db, get_data, disconnect_db
 from vector_api import search_events
-import config
+from database_api import get_events_by_ids
 
 app = Flask(__name__)
 
@@ -16,21 +15,14 @@ def home():
 def search():
     question = request.form['search_query']
     
-    # 벡터 API를 통해 eventid 리스트 가져오기
+    # 벡터 API 호출
     event_ids = search_events(question)
     
-    if event_ids:
-        # 데이터베이스에서 해당 eventid에 대한 정보 가져오기
-        conn, cur = connect_db()
-        placeholders = ', '.join(['%s'] * len(event_ids))
-        query = f"SELECT * FROM event WHERE EventID IN ({placeholders})"
-        cur.execute(query, tuple(event_ids))
-        events = cur.fetchall()
-        disconnect_db(conn, cur)
-    else:
-        events = []
+    # 데이터베이스 API 호출
+    events = get_events_by_ids(event_ids) if event_ids else []
 
     return render_template('results.html', events=events)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

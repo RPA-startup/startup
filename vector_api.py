@@ -3,7 +3,6 @@ import json
 import config
 
 def search_events(question):
-    # 벡터 API 호출
     url = config.vectocore["API_URL"]
     payload = json.dumps({
         "command": "extream_search",
@@ -13,8 +12,8 @@ def search_events(question):
     })
     
     headers = {
-      'x-api-key': config.vectocore["Tenant_Key"], # Tenant Key
-      'Content-Type': 'application/json'
+        'x-api-key': config.vectocore["Tenant_Key"],
+        'Content-Type': 'application/json'
     }
 
     response = requests.request("POST", url, headers=headers, data=payload)
