@@ -1,6 +1,7 @@
 import mariadb
 import sys
 import config
+import pandas as pd
 
 # MariaDB 플랫폼에 연결
 def connect_db():
@@ -81,8 +82,32 @@ def update_keywords(cur, conn, event_id, keywords):
         print(f"EventID {event_id} 업데이트 중 오류 발생: {e}")
 
 
+# 데이터베이스에서 데이터를 엑셀 파일로 저장하는 함수
+def export_to_excel(cur, query, file_name="output.xlsx"):
+    try:
+        # SQL 쿼리 실행 및 DataFrame으로 변환
+        df = pd.read_sql(query, con=cur.connection)
+        
+        # DataFrame을 엑셀 파일로 저장
+        df.to_excel(file_name, index=False)
+        print(f"데이터가 {file_name} 파일로 성공적으로 저장되었습니다.")
+    except Exception as e:
+        print(f"엑셀 파일로 데이터를 내보내는 중 오류 발생: {e}")
+
 # 데이터베이스 연결 종료
 def disconnect_db(conn, cur):
     cur.close()
     conn.close()
     print("데이터베이스 연결이 종료되었습니다.")
+
+
+if __name__ == "__main__":
+    conn, cur = connect_db()
+
+    # 예시 쿼리
+    query = "SELECT eventid, keywords FROM event WHERE Keywords <> 'test';"
+
+    # 엑셀로 내보내기
+    export_to_excel(cur, query, file_name="event_data_keywords.xlsx")
+
+    disconnect_db(conn, cur)
