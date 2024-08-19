@@ -94,6 +94,15 @@ def export_to_excel(cur, query, file_name="output.xlsx"):
     except Exception as e:
         print(f"엑셀 파일로 데이터를 내보내는 중 오류 발생: {e}")
 
+def get_events_by_ids(event_ids):
+    conn, cur = connect_db()
+    placeholders = ', '.join(['%s'] * len(event_ids))
+    query = f"SELECT * FROM event WHERE EventID IN ({placeholders})"
+    cur.execute(query, tuple(event_ids))
+    events = cur.fetchall()
+    disconnect_db(conn, cur)
+    return events
+
 # 데이터베이스 연결 종료
 def disconnect_db(conn, cur):
     cur.close()
