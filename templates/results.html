@@ -143,6 +143,7 @@
             <p>{{ event[5] }}</p> <!-- Content -->
             {% if event[13] and event[13] != 'None' %} <!-- Base64 이미지가 존재하는 경우 -->
             <img src="data:image/jpg;base64,{{ event[13] }}" alt="Event Image">
+            <p>이미지 있음</p>
             {% endif %}
         </div>
         {% endfor %}
@@ -152,7 +153,7 @@
     {% endif %}
     
     <!-- 모달 -->
-    <div id="cardModal" class="modal">
+    <div id="cardModal" class="modal" onclick="closeModalOnClickOutside(event)">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h2 id="modalTitle"></h2>
@@ -196,6 +197,14 @@
         // ESC 키 이벤트 리스너 함수
         function escKeyListener(event) {
             if (event.key === 'Escape') {
+                closeModal();
+            }
+        }
+
+        // 모달 외부 클릭시 모달 닫기
+        function closeModalOnClickOutside(event) {
+            var modal = document.getElementById("cardModal");
+            if (event.target === modal) {
                 closeModal();
             }
         }
