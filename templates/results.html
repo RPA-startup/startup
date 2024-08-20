@@ -125,8 +125,10 @@
 </head>
 <body>
     <a href="/" class="home-button">홈으로 가기</a>
-    <h1>검색 결과</h1>
-    
+    <h1>응답 결과</h1>
+    <div>
+        <h3>검색한 키워드 : {{ search_query }}</h3>
+    </div>
     {% if suggestions %}
     <div class="suggestions">
         <h2>마케팅 제안서</h2>
@@ -143,7 +145,6 @@
             <p>{{ event[5] }}</p> <!-- Content -->
             {% if event[13] and event[13] != 'None' %} <!-- Base64 이미지가 존재하는 경우 -->
             <img src="data:image/jpg;base64,{{ event[13] }}" alt="Event Image">
-            <p>이미지 있음</p>
             {% endif %}
         </div>
         {% endfor %}
