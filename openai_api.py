@@ -54,9 +54,39 @@ def generate_keywords(department_store, store_location, title, content, start_da
         messages=[
             {"role": "user", "content": prompt}
         ],
-        max_tokens=200
+        max_tokens=500
     )
 
     keywords = response.choices[0].message.content.strip()
     print("생성된 키워드: ", keywords)
     return keywords
+
+
+def generate_marketing_suggestions(keyword, events):
+    prompt = (
+        f"나는 현대백화점의 마케팅 담당자야 현대백화점 행사를 기획하고 있는데 하고싶은 핵심 키워드는 다음과 같아 : {keyword}\n"
+        f"이전에 다른 지점에서 진행했던 5개의 행사내용이야:\n"
+    )
+    
+    for i, event in enumerate(events, 1):
+        prompt += (
+            f"{i}. 백화점 : {event[1]}, 지점 : {event[2]}, "
+            f"행사 제목 : {event[4]}, 행사 내용 : {event[5]}, "
+            f"행사 기간 : {event[6]} ~ {event[7]}\n"
+        )
+
+    prompt += "이를 바탕으로 다른 지점들에 경쟁력이 있을 행사 3-5가지 기획해줘."
+
+    response = client.chat.completions.create(
+        model="gpt-4",
+        messages=[
+            {
+            "role": "system",
+            "content": "당신은 현대백화점의 행사를 기획하는 마케팅팀장이다."
+        },
+            {"role": "user", "content": prompt}
+        ],
+        max_tokens=1500
+    )
+
+    return response.choices[0].message.content.strip()

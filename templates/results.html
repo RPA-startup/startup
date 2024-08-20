@@ -8,57 +8,198 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            background-color: #f4f4f4;
         }
-        table {
+        .home-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #4285F4;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .home-button:hover {
+            background-color: #357ae8;
+        }
+        .suggestions {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
             width: 100%;
-            border-collapse: collapse;
+            max-width: 300px;
+            height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            cursor: pointer;
         }
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
+        .card h2 {
+            margin-top: 0;
+            font-size: 20px;
+            color: #333;
+        }
+        .card h3 {
+            margin: 10px 0;
+            font-size: 18px;
+            color: #555;
+        }
+        .card p {
+            font-size: 14px;
+            color: #666;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .card img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        @media (min-width: 600px) {
+            .card {
+                width: calc(33.33% - 20px);
+            }
+        }
+        /* 모달 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+        }
+        .modal-content {
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #fff;
+            width: 80%;
+            max-width: 700px;
+            text-align: center;
+        }
+        .modal-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .modal-content h2, .modal-content h3, .modal-content p {
             text-align: left;
         }
-        th {
-            background-color: #f4f4f4;
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
+    <a href="/" class="home-button">홈으로 가기</a>
     <h1>검색 결과</h1>
     
+    {% if suggestions %}
+    <div class="suggestions">
+        <h2>마케팅 제안서</h2>
+        <pre>{{ suggestions }}</pre>
+    </div>
+    {% endif %}
+    
     {% if events %}
-    <table>
-        <tr>
-            <th>Event ID</th>
-            <th>Department Store</th>
-            <th>Store Location</th>
-            <th>Category</th>
-            <th>Title</th>
-            <th>Content</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Keywords</th>
-            <th>Site URL</th>
-            <th>Image URL</th>
-        </tr>
+    <div class="container">
         {% for event in events %}
-        <tr>
-            <td>{{ event[0] }}</td>
-            <td>{{ event[1] }}</td>
-            <td>{{ event[2] }}</td>
-            <td>{{ event[3] }}</td>
-            <td>{{ event[4] }}</td>
-            <td>{{ event[5] }}</td>
-            <td>{{ event[6] }}</td>
-            <td>{{ event[7] }}</td>
-            <td>{{ event[8] }}</td>
-            <td>{{ event[9] }}</td>
-            <td>{{ event[10] }}</td>
-        </tr>
+        <div class="card" onclick="openModal(`{{ event[1] }}`, `{{ event[2] }}`, `{{ event[4] }}`, `{{ event[5] }}`, `{{ event[6] }}`, `{{ event[7] }}`, `{{ event[13] }}`)">
+            <h2>{{ event[1] }} - {{ event[2] }}</h2> <!-- DepartmentStore - StoreLocation -->
+            <h3>{{ event[4] }}</h3> <!-- Title -->
+            <p>{{ event[5] }}</p> <!-- Content -->
+            {% if event[13] and event[13] != 'None' %} <!-- Base64 이미지가 존재하는 경우 -->
+            <img src="data:image/jpg;base64,{{ event[13] }}" alt="Event Image">
+            <p>이미지 있음</p>
+            {% endif %}
+        </div>
         {% endfor %}
-    </table>
+    </div>
     {% else %}
     <p>검색 결과가 없습니다.</p>
     {% endif %}
+    
+    <!-- 모달 -->
+    <div id="cardModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <h3 id="modalSubtitle"></h3>
+            <p id="modalContent"></p>
+            <img id="modalImage" src="" alt="Full-size Image">
+            <p id="modalDate"></p>
+        </div>
+    </div>
+
+    <script>
+        // 모달 열기
+        function openModal(store, location, title, content, startDate, endDate, imageSrc) {
+            var modal = document.getElementById("cardModal");
+            document.getElementById("modalTitle").textContent = `${store} - ${location}`;
+            document.getElementById("modalSubtitle").textContent = title;
+            document.getElementById("modalContent").textContent = content;
+            document.getElementById("modalDate").textContent = `기간: ${startDate} ~ ${endDate}`;
+            var modalImg = document.getElementById("modalImage");
+            if (imageSrc && imageSrc !== 'None') {
+                modalImg.src = `data:image/jpg;base64,${imageSrc}`;
+                modalImg.style.display = "block";
+            } else {
+                modalImg.style.display = "none";
+            }
+            modal.style.display = "block";
+
+            // ESC 키 이벤트 리스너 추가
+            document.addEventListener('keydown', escKeyListener);
+        }
+
+        // 모달 닫기
+        function closeModal() {
+            var modal = document.getElementById("cardModal");
+            modal.style.display = "none";
+
+            // ESC 키 이벤트 리스너 제거
+            document.removeEventListener('keydown', escKeyListener);
+        }
+
+        // ESC 키 이벤트 리스너 함수
+        function escKeyListener(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        }
+    </script>
 </body>
 </html>

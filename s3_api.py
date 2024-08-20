@@ -69,7 +69,7 @@ def get_file_content_as_base64(bucket_name, s3_file_path):
 if __name__ == "__main__":
     # 업로드 예시
     local_file_path = "C:/path/to/your/file.txt"
-    s3_file_path = "20240816신세계.jpg"
+    s3_file_path = "2024.08.19_테마_본점_그로서리6.jpg"
     bucket_name = config.s3_Info["bucket_name"]
     # download_path = r"C:\Users\Administrator\Documents\김진우_업무\startup-1\정육1.jpg"
     # upload_to_s3(local_file_path, bucket_name, s3_file_path)

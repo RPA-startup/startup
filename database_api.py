@@ -2,7 +2,7 @@ import mariadb
 import sys
 import config
 import pandas as pd
-
+from s3_api import get_file_content_as_base64
 # MariaDB 플랫폼에 연결
 def connect_db():
     try:
@@ -102,6 +102,27 @@ def get_events_by_ids(event_ids):
     events = cur.fetchall()
     disconnect_db(conn, cur)
     return events
+
+def get_events_with_images(event_ids):
+    conn, cur = connect_db()
+    placeholders = ', '.join(['%s'] * len(event_ids))
+    query = f"SELECT * FROM event WHERE EventID IN ({placeholders})"
+    cur.execute(query, tuple(event_ids))
+    events = cur.fetchall()
+
+    # Base64 인코딩된 이미지 데이터 추가
+    events_with_images = []
+    for event in events:
+        image_url = event[10]  # ImageURL 컬럼이 event의 10번째 인덱스
+        if image_url:
+            base64_image = get_file_content_as_base64(config.s3_Info["bucket_name"], image_url)
+        else:
+            base64_image = None
+        
+        events_with_images.append(event + (base64_image,))
+
+    disconnect_db(conn, cur)
+    return events_with_images
 
 # 데이터베이스 연결 종료
 def disconnect_db(conn, cur):
