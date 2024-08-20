@@ -64,16 +64,60 @@
             color: red;
             text-align: center;
         }
+
+        /* 로딩 모션 */
+        .loading-spinner {
+            display: none;
+            border: 8px solid rgba(255, 255, 255, 0.3);
+            border-top: 8px solid #fff;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-top: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 로딩 텍스트 */
+        .loading-text {
+            display: none;
+            margin-top: 10px;
+            font-size: 16px;
+            color: white;
+        }
     </style>
 </head>
 <body>
     <div class="logo">AI Robot Marketer</div>
-        <form class="search-box" action="/search" method="POST">
-            <input type="text" name="search_query" placeholder="검색어를 입력하세요">
-            <button type="submit">검색</button>
-        </form>    
+    <form class="search-box" action="/search" method="POST" onsubmit="showLoadingSpinner()">
+        <input type="text" name="search_query" placeholder="검색어를 입력하세요">
+        <button type="submit">검색</button>
+    </form>
     <div class="warning-text">
         AI가 작성한 내용으로 허위 사실이 포함될 수 있습니다.
     </div>
+    <div class="loading-spinner" id="loadingSpinner"></div>
+    <div class="loading-text" id="loadingText">AI가 응답을 생성중입니다<span id="dots"></span></div>
+
+    <script>
+        function showLoadingSpinner() {
+            document.getElementById("loadingSpinner").style.display = "block";
+            document.getElementById("loadingText").style.display = "block";
+            animateDots();
+        }
+
+        function animateDots() {
+            const dots = document.getElementById("dots");
+            let dotCount = 0;
+            setInterval(() => {
+                dotCount = (dotCount + 1) % 4;
+                dots.textContent = '.'.repeat(dotCount);
+            }, 500);
+        }
+    </script>
 </body>
 </html>
