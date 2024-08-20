@@ -1,8 +1,5 @@
-# 실행방법
-# pip install flask
-# python app.py 실행 후 http://127.0.0.1:5000 접속
 from flask import Flask, render_template, request
-from database_api import connect_db, disconnect_db
+from database_api import get_events_with_images
 from vector_api import search_events
 from openai_api import generate_marketing_suggestions
 
@@ -22,12 +19,7 @@ def search():
     events = []
     if event_ids:
         # 데이터베이스에서 해당 eventid에 대한 정보 가져오기
-        conn, cur = connect_db()
-        placeholders = ', '.join(['%s'] * len(event_ids))
-        query = f"SELECT * FROM event WHERE EventID IN ({placeholders})"
-        cur.execute(query, tuple(event_ids))
-        events = cur.fetchall()
-        disconnect_db(conn, cur)
+        events = get_events_with_images(event_ids)
     
     # OpenAI API를 통해 마케팅 제안 생성
     suggestions = generate_marketing_suggestions(question, events)
