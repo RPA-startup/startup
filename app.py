@@ -24,7 +24,7 @@ def search():
     # OpenAI API를 통해 마케팅 제안 생성
     suggestions = generate_marketing_suggestions(question, events)
     
-    return render_template('results.html', events=events, suggestions=suggestions)
+    return render_template('results.html', events=events, suggestions=suggestions, search_query=question)
 
 if __name__ == '__main__':
     app.run(debug=True)
