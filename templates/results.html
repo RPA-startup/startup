@@ -143,7 +143,6 @@
             <p>{{ event[5] }}</p> <!-- Content -->
             {% if event[13] and event[13] != 'None' %} <!-- Base64 이미지가 존재하는 경우 -->
             <img src="data:image/jpg;base64,{{ event[13] }}" alt="Event Image">
-            <p>이미지 있음</p>
             {% endif %}
         </div>
         {% endfor %}
