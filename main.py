@@ -1,4 +1,4 @@
-from database_api import connect_db, get_empty_keywords_rows, update_content, get_filled_content_rows, update_keywords, disconnect_db
+from database_api import connect_db, get_empty_keywords_rows, update_content, get_filled_content_rows, update_keywords, disconnect_db, delete_row
 from s3_api import get_file_content_as_base64
 from openai_api import process_images_and_get_response, generate_keywords
 import config
@@ -29,6 +29,9 @@ if __name__ == "__main__":
                 # OpenAI API를 사용하여 이미지 처리 및 Content 업데이트
                 response_text = process_images_and_get_response([base64_image])
                 update_content(cur, conn, event_id, response_text)
+            else:
+                # 이미지 가져오는 중 오류 발생 시 해당 행 삭제
+                delete_row(cur, conn, event_id)
 
     # Step 2: Content가 채워지고 Keywords가 비어있는 행들 가져오기
     rows_with_content = get_filled_content_rows(cur)

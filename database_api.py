@@ -125,6 +125,15 @@ def get_events_with_images(event_ids):
     disconnect_db(conn, cur)
     return events_with_images
 
+# 특정 행을 삭제하는 함수
+def delete_row(cur, conn, event_id):
+    try:
+        print(f"EventID {event_id} 행을 삭제하는 중...")
+        cur.execute(f"DELETE FROM {config.DB_Info['table']} WHERE EventID = %s", (event_id,))
+        conn.commit()
+        print(f"EventID {event_id} 행 삭제 완료.")
+    except mariadb.Error as e:
+        print(f"EventID {event_id} 행 삭제 중 오류 발생: {e}")
 
 # 데이터베이스 연결 종료
 def disconnect_db(conn, cur):
